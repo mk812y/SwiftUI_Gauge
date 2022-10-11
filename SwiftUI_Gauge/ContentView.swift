@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var progress = 0.7
+    @State private var progress = 0.7
     @State private var currentSpeed = 100.0
+    @State private var currentSpeedNew = 215.0
+    @State private var minValue = 0.0
+    @State private var maxValue = 300.0
+    let gradient = Gradient(colors: [.green, .yellow, .orange, .red])
     
     var body: some View {
         VStack {
@@ -50,6 +54,21 @@ struct ContentView: View {
             }
             .tint(.red)
             addGaugeStyle
+            Gauge(value: currentSpeedNew, in: minValue...maxValue) {
+            } currentValueLabel: {
+                Text("\(currentSpeed.formatted(.number))")
+                    .foregroundColor(.blue)
+            } minimumValueLabel: {
+                Text(minValue.formatted(.number))
+                    .foregroundColor(.green)
+                    .bold()
+            } maximumValueLabel: {
+                Text(maxValue.formatted(.number))
+                    .foregroundColor(.red)
+                    .bold()
+            }
+            .gaugeStyle(.accessoryCircular)
+            .tint(gradient)
             Gauge(value: currentSpeed, in: 0...200) {
                    Image(systemName: "gauge.medium")
                        .font(.system(size: 50.0))
@@ -57,6 +76,7 @@ struct ContentView: View {
                    Text("\(currentSpeed.formatted(.number))")
                }
                .gaugeStyle(SpeedometerGaugeStyle())
+            
         }
         .padding()
     }
@@ -141,12 +161,12 @@ struct SpeedometerGaugeStyle: GaugeStyle {
                 .foregroundColor(Color(.systemGray6))
             Circle()
                 .trim(from: 0, to: 0.75 * configuration.value)
-                .stroke(purpleGradient, lineWidth: 20)
+                .stroke(purpleGradient, lineWidth: 10)
                 .rotationEffect(.degrees(135))
             Circle()
                 .trim(from: 0, to: 0.75)
                 .stroke(Color(.black), style: StrokeStyle(
-                    lineWidth: 10,
+                    lineWidth: 5,
                     lineCap: .butt,
                     lineJoin: .round,
                     dash: [1, 34],
@@ -157,7 +177,7 @@ struct SpeedometerGaugeStyle: GaugeStyle {
             VStack {
                 configuration.currentValueLabel
                     .font(.system(
-                        size: 80,
+                        size: 20,
                         weight: .bold,
                         design: .rounded
                     ))
@@ -168,7 +188,7 @@ struct SpeedometerGaugeStyle: GaugeStyle {
                     .foregroundColor(.gray)
             }
         }
-        .frame(width: 300, height: 300)
+        .frame(width: 100, height: 100)
     }
     
     
